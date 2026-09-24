@@ -1,0 +1,34 @@
+name: Go
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7
+      - uses: cloudx-io/setup-go@8b45cf394acf101459db0d47aa9735a4fe5eea63 # ratchet:cloudx-io/setup-go@v1
+        with:
+          go-version: '1.27.0'
+          cache-key-prefix: test
+      - run: go test ./...
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7
+      - uses: cloudx-io/setup-go@8b45cf394acf101459db0d47aa9735a4fe5eea63 # ratchet:cloudx-io/setup-go@v1
+        with:
+          go-version: '1.27.0'
+          cache-key-prefix: lint
+      - uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # ratchet:golangci/golangci-lint-action@v9
+        with:
+          version: v2.13.1
+          skip-cache: true
+      - run: |
+          go mod tidy
+          git diff --exit-code go.mod go.sum
