@@ -82,7 +82,7 @@ linters:
     exhaustive:
       check:
         - switch
-        - map
+        - mapliteral
       default-signifies-exhaustive: true
     gocritic:
       disabled-checks:
